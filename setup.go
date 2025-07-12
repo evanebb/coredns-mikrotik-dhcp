@@ -15,7 +15,8 @@ func setup(c *caddy.Controller) error {
 	var baseURL string
 	var username string
 	var password string
-	var insecure bool
+
+	var opts []MikroTikAPILeaseGetterOption
 
 	for c.Next() {
 		origins = plugin.OriginsFromArgsOrServerBlock(c.RemainingArgs(), c.ServerBlockKeys)
@@ -45,18 +46,13 @@ func setup(c *caddy.Controller) error {
 				if len(v) != 0 {
 					return plugin.Error(pluginName, c.Err("unnecessary value specified for insecure option"))
 				}
-				insecure = true
+				opts = append(opts, WithInsecureSkipVerify())
 			}
 		}
 	}
 
 	if baseURL == "" || username == "" || password == "" {
 		return plugin.Error(pluginName, c.Err("missing credentials"))
-	}
-
-	var opts []MikroTikAPILeaseGetterOption
-	if insecure {
-		opts = append(opts, WithInsecureSkipVerify())
 	}
 
 	leaseGetter := NewMikroTikAPILeaseGetter(baseURL, username, password, opts...)
