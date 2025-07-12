@@ -47,7 +47,7 @@ func (p *MikroTikDHCPPlugin) ServeDNS(ctx context.Context, w dns.ResponseWriter,
 	a.Answer = answers
 	_ = w.WriteMsg(a)
 
-	return 0, nil
+	return dns.RcodeSuccess, nil
 }
 
 func (p *MikroTikDHCPPlugin) Name() string {
