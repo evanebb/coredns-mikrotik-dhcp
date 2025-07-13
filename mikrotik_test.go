@@ -50,7 +50,6 @@ func TestMikroTikAPILeaseGetter(t *testing.T) {
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		resp := errorResponse{Error: http.StatusBadRequest, Message: "Bad Request"}
 		writeJSONResponse(w, http.StatusUnauthorized, resp)
-		return
 	})
 
 	ts := httptest.NewServer(mux)

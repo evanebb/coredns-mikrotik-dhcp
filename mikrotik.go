@@ -64,7 +64,9 @@ func (g *MikroTikAPILeaseGetter) doRequest(req *http.Request, v any) error {
 		return err
 	}
 
-	defer res.Body.Close()
+	defer func() {
+		_ = res.Body.Close()
+	}()
 
 	if res.StatusCode < http.StatusOK || res.StatusCode >= http.StatusBadRequest {
 		var errResponse errorResponse
