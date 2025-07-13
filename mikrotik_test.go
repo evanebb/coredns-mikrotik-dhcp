@@ -1,6 +1,7 @@
 package coredns_mikrotik_dhcp
 
 import (
+	"context"
 	"encoding/json"
 	"net"
 	"net/http"
@@ -55,9 +56,12 @@ func TestMikroTikAPILeaseGetter(t *testing.T) {
 	ts := httptest.NewServer(mux)
 	defer ts.Close()
 
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
 	t.Run("Successfully get bound leases", func(t *testing.T) {
 		lg := NewMikroTikAPILeaseGetter(ts.URL, "admin", "foobar")
-		actualLeases, err := lg.GetBoundLeases(t.Context())
+		actualLeases, err := lg.GetBoundLeases(ctx)
 		if err != nil {
 			t.Fatalf("expected err to be nil, got %v", err)
 		}
@@ -69,7 +73,7 @@ func TestMikroTikAPILeaseGetter(t *testing.T) {
 
 	t.Run("Authorization error", func(t *testing.T) {
 		lg := NewMikroTikAPILeaseGetter(ts.URL, "admin", "invalid")
-		actualLeases, err := lg.GetBoundLeases(t.Context())
+		actualLeases, err := lg.GetBoundLeases(ctx)
 		if err == nil {
 			t.Fatalf("expected error to occur, got nil")
 		}
