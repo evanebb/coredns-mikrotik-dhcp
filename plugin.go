@@ -83,6 +83,12 @@ func (p *MikroTikDHCPPlugin) getRecords(ctx context.Context, zone, name string) 
 		rr.A = lease.Address
 
 		rrset = append(rrset, rr)
+
+		// Avoid adding multiple records for the same hostname, in case of duplicate hostnames
+		// Maybe the best solution would be to sort the leases by age and prioritize the oldest one in case of a
+		// duplicate hostname, instead of relying on whatever the sorting in the MikroTik API is?
+		// I'll tackle that when/if I actually run into this problem, and leaving it like this for now
+		break
 	}
 
 	return rrset, nil
