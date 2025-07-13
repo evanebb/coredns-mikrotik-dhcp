@@ -26,25 +26,25 @@ func setup(c *caddy.Controller) error {
 			case "url":
 				v := c.RemainingArgs()
 				if len(v) != 1 {
-					return plugin.Error(pluginName, c.Err("missing URL"))
+					return plugin.Error(pluginName, c.Errf("invalid URL: %v", v))
 				}
 				baseURL = v[0]
 			case "username":
 				v := c.RemainingArgs()
 				if len(v) != 1 {
-					return plugin.Error(pluginName, c.Err("missing username"))
+					return plugin.Error(pluginName, c.Errf("invalid username: %v", v))
 				}
 				username = v[0]
 			case "password":
 				v := c.RemainingArgs()
 				if len(v) != 1 {
-					return plugin.Error(pluginName, c.Err("missing password"))
+					return plugin.Error(pluginName, c.Errf("invalid password: %v", v))
 				}
 				password = v[0]
 			case "insecure":
 				v := c.RemainingArgs()
 				if len(v) != 0 {
-					return plugin.Error(pluginName, c.Err("unnecessary value specified for insecure option"))
+					return plugin.Error(pluginName, c.Errf("unnecessary value for insecure option: %v", v))
 				}
 				opts = append(opts, WithInsecureSkipVerify())
 			}
