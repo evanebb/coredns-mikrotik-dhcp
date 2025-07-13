@@ -36,7 +36,8 @@ func (p *MikroTikDHCPPlugin) ServeDNS(ctx context.Context, w dns.ResponseWriter,
 	}
 
 	answers, err := p.getRecords(ctx, zoneName, state.Name())
-	if err != nil {
+	if err != nil || len(answers) == 0 {
+		// We should return an NXDOMAIN, but we don't have a SOA record available here
 		return dns.RcodeServerFailure, err
 	}
 
